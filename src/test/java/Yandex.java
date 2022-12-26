@@ -1,10 +1,7 @@
-import com.epam.http.annotations.ServiceDomain;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
 import org.testng.asserts.SoftAssert;
 
 import java.time.Duration;
