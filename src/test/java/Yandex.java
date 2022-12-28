@@ -1,206 +1,138 @@
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.testng.asserts.SoftAssert;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Map;
 
-public class Yandex {
-    public static WebDriver dr;
-    public static List<WebElement> pricesRange;
+public class ru {
+    public ChromeDriver driver;
 
-    public void settingDriver(String google) {
+    public void SettingDriver(){
 
-
-        ChromeOptions options = new ChromeOptions();
+       ChromeOptions options = new ChromeOptions();
         options.setExperimentalOption("excludeSwitches", Collections.singletonList("enable-automation"));
         options.addArguments("--disable-useAutomationExtension");
         options.addArguments("--disable-blink-features=AutomationControlled");
+
+        options.addArguments("--disable-notifications");
+        options.addArguments("--start-maximized");
+
+
+        Map<String, Object> prefs = new HashMap<String, Object>();
+
+        prefs.put("credentials_enable_service", false);
+        prefs.put("profile.password_manager_enabled", false);
+        options.setExperimentalOption("prefs", prefs);
+
         WebDriverManager.chromedriver().setup();
 
-        dr = new ChromeDriver(options);
+        driver =  new ChromeDriver(options);
+        driver.manage().window().maximize();
+    }
+    public void OpenDriver(String google ){
 
-        dr.manage().window().maximize();
-        dr.get(google);
+       driver.get(google);
 
     }
+    public void OpenMail(String XpathInput,String mailURL,String mailLink){                            // почта:taskmail123456@mail.ru
+        WebElement element1 = driver.findElement(By.xpath(XpathInput));// пароль:vsemprivet@12345671245etedgvg
+        element1.sendKeys(mailURL, Keys.ENTER);
 
 
-    public void Laptops(String searching,String aHref,String S,String finding) throws InterruptedException {
-        try {
-            WebElement elo = dr.findElement(By.xpath(searching));
-            elo.click();
-            elo.sendKeys(aHref, Keys.ENTER);
-            Thread.sleep(2000);
-            WebElement eloo = dr.findElement(By.xpath(S));
-            eloo.click();
-            WebElement el1 = dr.findElement(By.xpath(finding));
-            el1.click();
+        WebElement element2 = driver.findElement(By.xpath(mailLink));
+
+        element2.click();
+    }
+    public void LogIn(String XpathLogin ,String Login ,String XpathPassword,String pass)  {
+
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(4));
 
 
-        }
-        catch (Exception e) {
+        WebElement FieldLogin = driver.findElement(By.xpath(XpathLogin));
+        FieldLogin.click();
+        FieldLogin.sendKeys(Login,Keys.ENTER);
 
-            WebElement bot = dr.findElement(By.xpath("//input[@type=\"submit\"]"));
-            bot.click();
-            dr.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
-            WebElement el1 = dr.findElement(By.xpath(finding));
-            el1.click();
-            Thread.sleep(3000);
-        }
-
-
+        WebElement FieldPass = driver.findElement(By.xpath(XpathPassword));
+        FieldPass.sendKeys(pass,Keys.ENTER);
 
     }
-    public void filter(String laptops,String BrandLenovo,
-                       String range) throws InterruptedException {
-        try {
-            WebElement el2 = dr.findElement(By.xpath(laptops));
-            el2.click();
-
-            WebElement Brand = dr.findElement(By.xpath(BrandLenovo));
-            Brand.click();
-
-             pricesRange = dr.findElements(By.xpath(range));
-
-
-        } catch (Exception e) {
-
-            WebElement bot = dr.findElement(By.xpath("//input[@type=\"submit\"]"));
-            bot.click();
-            Thread.sleep(22000);
-            WebElement Brand = dr.findElement(By.xpath(BrandLenovo));
-            Brand.click();
-
-            pricesRange = dr.findElements(By.xpath(range));
-
-
-        }
-    }
-    public void TestData(String min,String max) throws InterruptedException {
-        pricesRange.get(0).sendKeys(min);
-        pricesRange.get(1).sendKeys(max);
-        Thread.sleep(4000);
-    }
-
-    public void ValidElements(String listOfElements,String valPrice,String minvalue,String maxvalue) throws InterruptedException {
-        JavascriptExecutor js = (JavascriptExecutor) dr;
-
-        SoftAssert softAssert = new SoftAssert();
-
-        js.executeScript("window.scrollBy(0,13100)");
-
-        dr.manage().timeouts().implicitlyWait(Duration.ofSeconds(6));
-        List <WebElement> LenovoLaptops = dr.findElements(By.xpath(listOfElements)).stream().collect(Collectors.toList());
-        List <WebElement> validPrice = dr.findElements(By.xpath(valPrice)).stream().collect(Collectors.toList());
-        System.out.println(LenovoLaptops.size());
-        System.out.println(validPrice.size());
-        for(WebElement element:LenovoLaptops){
-
-            String result = element.getAttribute("title");
-            System.out.println(result);
-
-            softAssert.assertTrue(result.toLowerCase().contains("lenovo"));
-
-            softAssert.assertTrue(result.length()>0);
-
-
-        }
-        for(WebElement price:validPrice){
-            String result1 =  price.getText().replaceAll("\\s+","").replaceAll("₽","");
-            System.out.println(result1);
-
-
-            softAssert.assertTrue(Integer.parseInt(result1)>=Integer.parseInt(minvalue)&&Integer.parseInt(result1)<=Integer.parseInt(maxvalue));
-
-            softAssert.assertTrue(result1.length()>0);
-        }
-
-
-    }
-    public void Payment(String linksOfElements){
-    JavascriptExecutor js = (JavascriptExecutor) dr;
-    js.executeScript("window.scrollBy(0,-12830)");
-    List <WebElement> LenovoLaptop = dr.findElements(By.xpath(linksOfElements));
-
-    WebElement OurLaptop =LenovoLaptop.get(0);
-    OurLaptop.click();
-    }
-
-
-
-    public void AddGood() throws InterruptedException {
+    public void SendMessage(String Exception,String SendMessage,String emailToSend,
+                            String email,String XpathField,String fieldToSend,String List){
         try{
-            String window1 = dr.getWindowHandle();
 
-            Set<String> currentWindows = dr.getWindowHandles();
-            String window2 = null;
+            WebElement message = driver.findElement(By.xpath(SendMessage));
+            message.click();
 
-            for(String window :currentWindows){
-                if(!window.equals(window1)){
-                    window2 = window;
-                    break;
-                }
-            }
-            dr.switchTo().window(window2);
-            dr.getCurrentUrl();
-        }
-        catch (Exception e){
-            WebElement bot = dr.findElement(By.xpath("//input[@type=\"submit\"]"));
-            bot.click();
-            dr.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
 
-            String window1 = dr.getWindowHandle();
 
-            Set<String> currentWindows = dr.getWindowHandles();
-            String window2 = null;
+            WebElement EmailToSend = new WebDriverWait(driver, Duration.ofSeconds(10))
+                    .until(ExpectedConditions.elementToBeClickable(By.xpath(emailToSend)));
 
-            for(String window :currentWindows){
-                if(!window.equals(window1)){
-                    window2 = window;
-                    break;
-                }
-            }
-            dr.switchTo().window(window2);
-            dr.getCurrentUrl();
+            EmailToSend.click();
+
+            EmailToSend.sendKeys(email);
+
+            WebElement FieldToSend = new WebDriverWait(driver, Duration.ofSeconds(10))
+                    .until(ExpectedConditions.elementToBeClickable(By.xpath(XpathField)));
+
+            FieldToSend.click();
+            FieldToSend.sendKeys(fieldToSend);
+
+
+
+            WebElement Send = new WebDriverWait(driver, Duration.ofSeconds(10))
+                    .until(ExpectedConditions.elementToBeClickable(By.xpath(List)));
+
+            Send.click();
+
 
         }
 
+        catch(Exception e){
 
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(4));
+
+            WebElement close = driver.findElement(By.xpath(Exception));
+            close.click();
+
+            WebElement message = driver.findElement(By.xpath(SendMessage));
+            message.click();
+
+
+            WebElement EmailToSend = new WebDriverWait(driver, Duration.ofSeconds(10))
+                    .until(ExpectedConditions.elementToBeClickable(By.xpath(emailToSend)));
+
+            EmailToSend.click();
+
+            EmailToSend.sendKeys(email);
+
+            WebElement FieldToSend = new WebDriverWait(driver, Duration.ofSeconds(10))
+                    .until(ExpectedConditions.elementToBeClickable(By.xpath(XpathField)));
+
+
+
+            FieldToSend.click();
+            FieldToSend.sendKeys(fieldToSend);
+
+
+
+
+
+            WebElement Send = new WebDriverWait(driver, Duration.ofSeconds(10))
+                    .until(ExpectedConditions.elementToBeClickable(By.xpath(List)));
+
+            Send.click();
+
+        }
 
     }
-    public void SelectElement(String Good) throws InterruptedException{
-        try {
-
-            List <WebElement> buying = dr.findElements(By.xpath(Good));
-
-            WebElement buy = buying.get(0);
-            buy.click();
-        }
-
-
-        catch (Exception e){
-
-            WebElement bot = dr.findElement(By.xpath("//input[@type=\"submit\"]"));
-            bot.click();
-            dr.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
-
-            List <WebElement> buying = dr.findElements(By.xpath(Good));
-
-            WebElement buy = buying.get(0);
-            buy.click();
-        }
-                }
-
-
-    public void quitDriver(){
-
-        dr.quit();
-    }
-
 }
