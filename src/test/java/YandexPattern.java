@@ -1,103 +1,66 @@
 import org.testng.IRetryAnalyzer;
-
 import org.testng.ITestResult;
-
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 
-
-public class YandexPattern implements IRetryAnalyzer {
-
-    Yandex task = new Yandex();
-    private int count =0;
-    private int maxcount =4;
-
+public class PageObjectPattern  implements IRetryAnalyzer {
+    int count =0;
+    int maxcount =4;
     public final static String GooglePath = "https://www.google.com/";
-    public final static String YandexMarket ="https://market.yandex.ru/";
-    public final static String Find = "//button[@id=\"catalogPopupButton\"]";
+    public final static String mail  ="mail.ru";
+    public final static String link = "//a[@href=\"https://account.mail.ru/login\"]";
     public final static String Search ="//input[@class=\"gLFyf\"]";
-    public final static String Search1 ="//h3[@class=\"LC20lb MBeuO DKV0Md\"]";
-    public final static String laptop ="//a[@href=\"/catalog--noutbuki/67959/list?promo-type=market&hid=91013\"]";
-    public final static String priceRange = "//div[@data-auto='filter-range-glprice']//following-sibling::input[1]";
-    public final static String Brand = "//label[@data-auto=\"filter-list-item-152981\"]";
+    public final static String LoginPath = "//input[@name=\"username\"]";
+    public final static String LoginData = "taskmail123456";
+    public final static String PasswordPath ="//input[@name=\"password\"]";
+    public final static String PasswordData ="vsemprivet@12345671245etedgvg";
+    public final static String Except ="//div[@class=\"ph-project-promo-close-icon__container svelte-m7oyyo\"]";
+    public final static String SendMessagePath ="//span[@class=\"compose-button__txt\"]";
+    public final static String EmailXpath ="//input[@style=\"width: 12px;\"]";
+    public final static String Email = "dokuchaev_av@tkbbank.ru";
+    public final static String XpathMessage = "//div[@aria-multiline=\"true\"]//child::div";
+    public final static String Message = "Добрый день\n Простейший автотест готов\n Кирилин Дмитрий Дмитриевич\n ссылка на код:https://github.com/dimayych02/ss.git";
 
 
 
-    public final static String list ="//div[@data-test-id=\"virtuoso-item-list\"]//a[@title]";
-    public final static String validPrice = "//div[@data-test-id='virtuoso-item-list']//article//a[@title]//following::span[@data-autotest-currency][1]";
+    public final String v="//button[@type=\"button\"]//span[text()='Отправить']";
+    ru Test = new ru();
 
-    public final static String  links = "//div[@data-test-id=\"virtuoso-item-list\"]//h3//a[@href]";
-    public final static String addingGood ="//div[@class=\"DhXul\"]//button";
-
-
-        @Test
-        public void test1() throws InterruptedException {
-        task.settingDriver(GooglePath);
-
-        }
-
-        @Test
-        public void test2() throws InterruptedException {
-            task.Laptops(Search,YandexMarket,Search1,Find);
-
-        }
-
-        @Test
-        public void test3 () throws InterruptedException {
-            task.filter(laptop,Brand,priceRange);
-
-        }
-    @Test(dataProvider ="dataTest")
-    public void test4(String minV,String maxV) throws InterruptedException {
-        task.TestData(minV,maxV);
+    @Test
+    public void test1(){
+        Test.SettingDriver();
     }
 
+    @Test
+    public void test2(){
+        Test.OpenDriver(GooglePath);
+    }
 
-        @Test(retryAnalyzer = YandexPattern.class, dataProvider ="dataTest")
-        public void test5(String v1,String v2) throws InterruptedException{
-            task.ValidElements(list,validPrice,v1,v2);
+    @Test
+    public void test3(){
+        Test.OpenMail(Search,mail,link);
+    }
 
-        }
+    @Test
+    public void test4() {
 
-        @Test(retryAnalyzer = YandexPattern.class)
+        Test.LogIn(LoginPath,LoginData,PasswordPath,PasswordData);
+    }
 
-        public void test6() throws InterruptedException{
-        task.Payment(links);
-        }
-        @Test(retryAnalyzer = YandexPattern.class )
-        public void test7() throws InterruptedException{
-            task.AddGood();
-        }
+    @Test(retryAnalyzer=PageObjectPattern.class)
+    public void test5(){
 
-        @Test(retryAnalyzer = YandexPattern.class)
+        Test.SendMessage(Except,SendMessagePath,EmailXpath,Email,XpathMessage,Message,v);
+    }
 
-        public void test8()  throws InterruptedException{
-        task.SelectElement(addingGood);
-
-        }
-
-        @Test
-        public void test9() throws InterruptedException{
-            task.quitDriver();
-
-        }
-
-
-
-        @Override
-        public boolean retry(ITestResult result) {
+    @Override
+    public boolean retry(ITestResult result) {
         if (!result.isSuccess()) {
             if (count < maxcount) {
                 count++;
                 return true;
-                }
             }
-            return false;
         }
-    @DataProvider(name="dataTest")
-    public Object[][] DataAndPrice(){
-        Object[][] GetData={{"2500","3000"},{"3500","5000"}};
-        return GetData;
+        return false;
     }
 }
