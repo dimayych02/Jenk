@@ -285,7 +285,7 @@
                 <version>2.14.1</version>
                 <configuration>
                     <includes>
-                        <include>**/*YandexPattern.java</include>
+                        <include>**/*PageObjectPattern.java</include>
                     </includes>
                 </configuration>
             </plugin>
