@@ -285,7 +285,7 @@
                 <version>2.14.1</version>
                 <configuration>
                     <includes>
-                        <include>**/*PageObjectPattern.java</include>
+                        <include>**/*PageObjectPatternTest.java</include>
                     </includes>
                 </configuration>
             </plugin>
